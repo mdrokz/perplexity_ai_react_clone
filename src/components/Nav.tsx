@@ -1,10 +1,26 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../App";
 import { Button } from "./Button"
+import { useNavigate } from "react-router-dom";
+
+type Profile = {
+    name: string;
+    avatar: string;
+}
 
 export const Nav = () => {
 
-    const { setShowModal, isLoggedIn } = useContext(AppContext);
+    const { setShowModal, setAuthType, isLoggedIn, setIsLoggedIn, isProfileSetup, setIsProfileSetup } = useContext(AppContext);
+    const navigate = useNavigate();
+
+    const [profile, setProfile] = useState<Profile>();
+
+    useEffect(() => {
+        if (isProfileSetup) {
+            setProfile(JSON.parse(localStorage.getItem("user")!));
+        }
+    }, [isProfileSetup])
+
     return (
         <div className="h-full w-min bg-[#f3f3ee] p-2 flex flex-col justify-between">
             <nav className="space-y-2 p-4 ">
@@ -24,21 +40,34 @@ export const Nav = () => {
                 </header>
                 <ul className="space-y-2">
                     <li>
-                        <Button icon={["fas", "magnifying-glass"]} label="Home" />
+                        <Button background={false} onClick={() => navigate("/")} icon={["fas", "magnifying-glass"]} label="Home" />
                     </li>
                     <li>
-                        <Button icon={["fas", "book"]} label="Library" />
+                        <Button onClick={() => navigate("/library")} background={false} icon={["fas", "book"]} label="Library" />
                     </li>
                     {isLoggedIn ? <li>
-                        <Button icon={["fas", "circle-nodes"]} label="AI Profile" />
+                        <Button background={false} icon={["fas", "circle-nodes"]} label="AI Profile" />
                     </li> : <li>
-                        <Button icon={["fas", "right-to-bracket"]} label="Login" />
+                        <Button background={false} onClick={() => {
+                            setShowModal(true);
+                            setAuthType("login");
+                        }} icon={["fas", "right-to-bracket"]} label="Login" />
                     </li>}
 
 
                 </ul>
                 {!isLoggedIn && <button className="px-4 py-2 rounded-lg w-full bg-teal-600 hover:bg-teal-500 transition duration-300 ease-in-out text-white">
                     Sign Up
+                </button>}
+
+                {isLoggedIn && <button onClick={() => {
+                    setIsLoggedIn(false);
+                    setIsProfileSetup(false);
+                    localStorage.setItem("isLoggedIn", "false");
+                    localStorage.setItem("isProfileSetup", "false");
+                    localStorage.setItem("user", "");
+                }} className="px-4 py-2 rounded-lg w-full bg-rose-600 hover:bg-rose-500 transition duration-300 ease-in-out text-white">
+                    Sign Out
                 </button>}
 
             </nav>
@@ -56,13 +85,17 @@ export const Nav = () => {
                         </button>
                     </div>
                 </div>
+                {isProfileSetup && <div className="flex space-x-3 p-2 items-center cursor-pointer rounded-md hover:bg-gray-200 transition ease-in-out duration-300">
+                    <img className="aspect-square rounded-full w-8" referrerPolicy="no-referrer" src={profile?.avatar} />
+                    <span className="font-bold text-md">{profile?.name}</span>
+                </div>}
                 <div className="py-2 space-y-4">
 
                     <hr className="border-t border-gray-300 border-b-0 border-l-0 border-r-0 h-0" />
                     <div className="flex space-x-2">
-                        <Button label="Download" icon={["fas", "mobile-screen"]} />
-                        <Button label="" icon={["fab", "x-twitter"]} />
-                        <Button label="" icon={["fab", "discord"]} />
+                        <Button background={false} label="Download" icon={["fas", "mobile-screen"]} />
+                        <Button background={false} label="" icon={["fab", "x-twitter"]} />
+                        <Button background={false} label="" icon={["fab", "discord"]} />
                     </div>
                 </div>
             </div>

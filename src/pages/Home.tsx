@@ -25,6 +25,15 @@ export const Home = () => {
                     </div>
                 </div>
             </div>
+            <div className="flex justify-center space-x-4">
+                <a className="text-teal-500 hover:underline" href="#">Try Pro</a>
+                <a className="text-gray-400 hover:underline" href="#">Careers</a>
+                <a className="text-gray-400 hover:underline" href="#">FAQ</a>
+                <a className="text-gray-400 hover:underline" href="#">Labs</a>
+                <a className="text-gray-400 hover:underline" href="#">Blog</a>
+                <a className="text-gray-400 hover:underline" href="#">Privacy</a>
+                <a className="text-gray-400 hover:underline" href="#">Terms</a>
+            </div>
         </section>
     )
 }
