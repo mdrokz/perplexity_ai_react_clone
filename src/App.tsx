@@ -2,13 +2,14 @@ import { Nav } from './components/Nav'
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Home } from './pages/Home';
 import { Modal } from './components/Modal';
-import { CredentialResponse, GoogleLogin, TokenResponse, useGoogleLogin } from '@react-oauth/google';
+import { TokenResponse, useGoogleLogin } from '@react-oauth/google';
 import { Button } from './components/Button';
 import { useEffect, useState } from 'react';
 import React from 'react';
 import { Search } from './components/Search';
 import { Result } from './pages/Result';
 import { Library } from './pages/Library';
+import { ProfileSetup } from './components/ProfileSetup';
 
 export const AppContext = React.createContext<any>({});
 
@@ -46,11 +47,18 @@ function App() {
 
   const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem("isLoggedIn") == "true");
 
+  const [showProfileSetup, setShowProfileSetup] = useState(false);
+
   const [isProfileSetup, setIsProfileSetup] = useState(localStorage.getItem("isProfileSetup") == "true");
+
+  const [user, setUser] = useState<any>();
 
   useEffect(() => {
 
-    localStorage.setItem("threads", JSON.stringify([]));
+    const threads = JSON.parse(localStorage.getItem("threads") ?? "{}");
+    if (Object.keys(threads).length == 0) {
+      localStorage.setItem("threads", JSON.stringify({}));
+    }
 
     window.addEventListener("keydown", (e) => {
       // ctrl + I
@@ -79,28 +87,50 @@ function App() {
 
         const data = await response.json();
 
-        // const imageBlob = await (await fetch(data.photos[0].url)).blob();
-
-        // const urlBlob = URL.createObjectURL(imageBlob); 
-
-        localStorage.setItem("user", JSON.stringify({
+        let user = {
           name: data.names[0].displayName,
           avatar: data.photos[0].url
-        }));
+        };
+
+        setUser(user);
+
+        localStorage.setItem("user", JSON.stringify(user));
 
         localStorage.setItem("isProfileSetup", "true");
         localStorage.setItem("isLoggedIn", "true");
 
         setIsProfileSetup(true);
         setIsLoggedIn(true);
-        // console.log(data.names[0].displayName,data.photos[0].url);
       } catch (e) {
         console.error(e);
         alert("Failed to login with Google");
       }
     }
-    if (authType == "signup" && isProfileSetup) {
-      setIsLoggedIn(true);
+    if (authType == "signup") {
+      setShowModal(false);
+      try {
+        const response = await fetch('https://people.googleapis.com/v1/people/me?personFields=names,photos', {
+          headers: {
+            'Authorization': `Bearer ${res.access_token}`
+          }
+        });
+
+        const data = await response.json();
+
+        let user = {
+          name: data.names[0].displayName,
+          avatar: data.photos[0].url
+        };
+
+        setUser(user);
+
+        localStorage.setItem("user", JSON.stringify(user));
+        setShowProfileSetup(true);
+
+      } catch (e) {
+        console.error(e);
+        alert("Failed to login with Google");
+      }
     }
     console.log(res);
   }
@@ -131,11 +161,35 @@ function App() {
             {(authType == "login" || authType == "signup") && <AuthModal onGoogleLoginSuccess={onGoogleLoginSuccess} onGoogleLoginFailure={onGoogleLoginFailure} />}
             {authType == "" && <SearchModal />}
           </Modal>
+          <ProfileSetup isOpen={showProfileSetup} closeModal={() => {
+            setIsLoggedIn(true);
+            setIsProfileSetup(true);
+            localStorage.setItem("isLoggedIn", "true");
+            localStorage.setItem("isProfileSetup", "true");
+            localStorage.setItem("user", JSON.stringify(user));
+            setShowProfileSetup(false);
+          }}>
+            <div className="space-y-2 p-5 flex flex-col">
+              <span className="font-bold text-4xl p-5">Create your account</span>
+              <div className="flex flex-col space-y-2">
+                <span>Avatar</span>
+                <img className="aspect-square rounded-full w-8" referrerPolicy="no-referrer" src={user?.avatar} />
+              </div>
+              <div className="flex flex-col space-y-2">
+                <span>Username</span>
+                <div className="bg-white p-2 rounded-lg border border-gray-200 hover:border-teal-500 transition ease-in-out duration-300 ">
+                  <input onChange={(e) => {
+                    setUser({ ...user, name: e.target.value });
+                  }} className="w-full border-none outline-none" placeholder="Enter your username" value={user?.name} />
+                </div>
+              </div>
+            </div>
+          </ProfileSetup>
           <Nav />
 
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/result" element={<Result />}></Route>
+            <Route path="/result" element={<Result />} />
             <Route path="/library" element={<Library />} />
           </Routes>
         </section>
