@@ -1,7 +1,7 @@
 // import the library
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faApple, faDiscord, faXTwitter } from '@fortawesome/free-brands-svg-icons';
-import { faArrowRight, faBook, faCircleNodes, faCirclePlus, faCompass, faEnvelope, faMagnifyingGlass, faMobileScreen, faRightToBracket } from '@fortawesome/free-solid-svg-icons';
+import { faApple, faDiscord, faGoogle, faXTwitter } from '@fortawesome/free-brands-svg-icons';
+import { faAlignLeft, faArrowRight, faBook, faCircleNodes, faCirclePlus, faCompass, faEllipsis, faEnvelope, faMagnifyingGlass, faMobileScreen, faPlus, faRightToBracket, faTimeline } from '@fortawesome/free-solid-svg-icons';
 
 import {} from '@fortawesome/react-fontawesome';
 
@@ -12,7 +12,12 @@ library.add(
   faXTwitter,
   faDiscord,
   faMobileScreen,
+  faAlignLeft,
   faCirclePlus,
+  faTimeline,
+  faEllipsis,
+  faGoogle,
+  faPlus,
   faEnvelope,
   faArrowRight,
   faRightToBracket,
