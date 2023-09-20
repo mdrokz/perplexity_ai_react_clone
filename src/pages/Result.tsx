@@ -2,6 +2,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
+function generateUUID() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random() * 16 | 0,
+            v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+}
+
 const Card = ({ title }: { title: string }) => {
     return (<div className="border bg-white p-4 border-gray-200 rounded-md hover:bg-gray-200 transition ease-in-out duration-300 cursor-pointer">
         <span>{title}</span>
@@ -44,36 +52,50 @@ export const Result = () => {
 
     const query = queryParams.get("query") ?? "";
 
+    const [title, setTitle] = useState("");
+
     const [result, setResult] = useState("");
 
     const loadResult = async () => {
+        setTitle(query);
         const res = await callOpenAI(query);
         setResult(res.choices[0].message.content);
 
         const threads = JSON.parse(localStorage.getItem("threads")!);
 
-        threads.push({
+        threads[generateUUID()] = {
             query,
-            result: res.choices[0].message.content
-        });
+            result: res.choices[0].message.content,
+            createdAt: new Date().toISOString()
+        };
+
+        localStorage.setItem("threads", JSON.stringify(threads));
     }
 
     useEffect(() => {
-        loadResult();
+        const threads = JSON.parse(localStorage.getItem("threads")!);
+
+        if(threads[query]) {
+            setTitle(threads[query].query);
+            setResult(threads[query].result);
+        } else {
+            loadResult();
+        }
+
     }, []);
 
     return (
         <section className="m-auto">
             <div className="flex justify-center p-20 flex-col items-start space-y-4">
                 <header>
-                    <span className="font-bold font-mono text-4xl">{query}</span>
+                    <span className="font-bold font-mono text-4xl">{title}</span>
                 </header>
                 <div className="flex flex-col space-y-2">
                     <div className="flex text-teal-500 space-x-2 items-center">
                         <FontAwesomeIcon icon={["fas", "timeline"]} />
                         <span>Sources</span>
                     </div>
-                    <div className="space-x-2 grid grid-cols-3 space-y-2">
+                    <div className="gap-x-2 grid grid-cols-3 gap-y-2">
                         {new Array(6).fill(0).map((_, i) => <Card key={i} title={`Source ${i + 1}`} />)}
                     </div>
                 </div>
