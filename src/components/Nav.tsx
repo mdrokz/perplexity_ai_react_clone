@@ -43,7 +43,19 @@ export const Nav = () => {
                         <Button background={false} onClick={() => navigate("/")} icon={["fas", "magnifying-glass"]} label="Home" />
                     </li>
                     <li>
-                        <Button onClick={() => navigate("/library")} background={false} icon={["fas", "book"]} label="Library" />
+                        <Button onClick={() => {
+                            if (!isLoggedIn) {
+                                if (!isProfileSetup) {
+                                    setShowModal(true);
+                                    setAuthType("signup");
+                                } else {
+                                    setShowModal(true);
+                                    setAuthType("login");
+                                }
+                            } else {
+                                navigate("/library")
+                            }
+                        }} background={false} icon={["fas", "book"]} label="Library" />
                     </li>
                     {isLoggedIn ? <li>
                         <Button background={false} icon={["fas", "circle-nodes"]} label="AI Profile" />
@@ -56,7 +68,10 @@ export const Nav = () => {
 
 
                 </ul>
-                {!isLoggedIn && <button className="px-4 py-2 rounded-lg w-full bg-teal-600 hover:bg-teal-500 transition duration-300 ease-in-out text-white">
+                {!isLoggedIn && <button onClick={() => {
+                    setShowModal(true);
+                    setAuthType("signup");
+                }} className="px-4 py-2 rounded-lg w-full bg-teal-600 hover:bg-teal-500 transition duration-300 ease-in-out text-white">
                     Sign Up
                 </button>}
 
