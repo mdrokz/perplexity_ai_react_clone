@@ -186,12 +186,11 @@ function App() {
             </div>
           </ProfileSetup>
           <Nav />
-
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/result" element={<Result />} />
-            <Route path="/library" element={<Library />} />
-          </Routes>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/result" element={<Result />} />
+              <Route path="/library" element={<Library />} />
+            </Routes>
         </section>
       </BrowserRouter>
     </AppContext.Provider>
