@@ -30,7 +30,7 @@ export const Nav = () => {
                     </span>
                     <button onClick={() => {
                         setShowModal(true);
-                    }} className="bg-white p-2 h-min w-full rounded-xl border text-sm hover:border-teal-500 transition duration-300 ease-in-out">
+                    }} className="flex bg-white p-2 h-min w-full rounded-xl border text-xs hover:border-teal-500 transition duration-300 ease-in-out">
                         <span>
                             New thread
                         </span>

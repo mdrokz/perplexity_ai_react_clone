@@ -32,7 +32,7 @@ export const Library = () => {
                 <div className="flex gap-x-sm"></div>
             </div>
             <hr className="border-t border-gray-300 border-b-0 border-l-0 border-r-0 h-0" />
-            <div className="w-full h-full mx-auto  max-w-screen-xl md:px-12 px-md">
+            <div className="w-full h-full max-h-[88vh] overflow-y-scroll mx-auto  max-w-screen-xl md:px-12 px-md">
                 <div className="lg:grid grid-cols-12 gap-12">
                     <div className="col-span-8 lg:mt-lg space-y-2">
                         <div className="flex justify-between items-center space-x-2">

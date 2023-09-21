@@ -6,3 +6,26 @@
 body {
     font-family: 'Courier New', Courier, monospace;
 }
+
+/* Styles for the scrollbar track (background) */
+::-webkit-scrollbar {
+    width: 8px; /* Adjust width for vertical scrollbar */
+    height: 8px; /* Adjust height for horizontal scrollbar */
+    background-color: transparent; /* You can set this to a color or keep it transparent */
+}
+
+/* Styles for the scrollbar thumb (the moving part) */
+::-webkit-scrollbar-thumb {
+    background-color: #38B2AC; /* This is the teal-500 color in Tailwind */
+    border-radius: 4px; /* Makes the thumb corners rounded */
+}
+
+/* Styles for the scrollbar thumb on hover */
+::-webkit-scrollbar-thumb:hover {
+    background-color: #2C7A7B; /* A slightly darker shade of teal for hover, you can adjust */
+}
+
+/* If you want to style the scrollbar "corner" (where horizontal and vertical scrollbars meet) */
+::-webkit-scrollbar-corner {
+    background-color: transparent; /* Adjust as needed */
+}

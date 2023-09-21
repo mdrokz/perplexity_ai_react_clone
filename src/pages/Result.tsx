@@ -13,7 +13,7 @@ function generateUUID() {
 
 const Loader = () => {
     return (<div className="flex flex-col items-center h-50 justify-center space-y-2">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"></div>
+        <div className="animate-spin rounded-full h-20 w-20 border-b-2 border-gray-900"></div>
         {/* <span className="text-gray-500">Loading...</span> */}
     </div>)
 }
